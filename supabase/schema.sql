@@ -458,6 +458,29 @@ CREATE TRIGGER book_bookmark_aggregates_trigger
     EXECUTE FUNCTION update_book_reaction_aggregates();
 
 -- =====================================================
+-- NOTIFICATIONS (broadcast from admin)
+-- =====================================================
+CREATE TABLE notifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    type VARCHAR(50) NOT NULL DEFAULT 'new_idea',
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    data JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_notifications_created ON notifications(created_at DESC);
+
+CREATE TABLE notification_reads (
+    student_id UUID REFERENCES students(id) ON DELETE CASCADE,
+    notification_id UUID REFERENCES notifications(id) ON DELETE CASCADE,
+    read_at TIMESTAMPTZ DEFAULT NOW(),
+    PRIMARY KEY (student_id, notification_id)
+);
+
+CREATE INDEX idx_notification_reads_student ON notification_reads(student_id);
+
+-- =====================================================
 -- ROW LEVEL SECURITY
 -- =====================================================
 ALTER TABLE students ENABLE ROW LEVEL SECURITY;
@@ -476,6 +499,8 @@ ALTER TABLE collections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE collection_books ENABLE ROW LEVEL SECURITY;
 ALTER TABLE intelligences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE shares ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notification_reads ENABLE ROW LEVEL SECURITY;
 
 -- Service role bypass (for API routes using service key)
 CREATE POLICY "Service role full access" ON students FOR ALL USING (true) WITH CHECK (true);
@@ -494,3 +519,5 @@ CREATE POLICY "Service role full access" ON collections FOR ALL USING (true) WIT
 CREATE POLICY "Service role full access" ON collection_books FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Service role full access" ON intelligences FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Service role full access" ON shares FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Service role full access" ON notifications FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Service role full access" ON notification_reads FOR ALL USING (true) WITH CHECK (true);

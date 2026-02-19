@@ -76,12 +76,11 @@ export default function PerfilPage() {
               {student.avatarUrl ? (
                 <img alt={student.firstName} className="w-full h-full object-cover" src={student.avatarUrl} />
               ) : (
-                <span className="material-icons-round text-4xl text-gray-500">person</span>
+                <span className="text-3xl font-bold text-white">
+                  {student.firstName.charAt(0).toUpperCase()}
+                </span>
               )}
             </div>
-            <button className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center border-2 border-background-dark">
-              <span className="material-icons-round text-white text-sm">edit</span>
-            </button>
           </div>
 
           <h2 className="text-xl font-bold text-white">{student.firstName} {student.lastName?.charAt(0)}.</h2>

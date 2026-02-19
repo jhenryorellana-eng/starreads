@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 import { useSuperAppBridge } from '@/hooks/use-super-app-bridge';
@@ -13,8 +13,9 @@ export default function AuthenticatedLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, isLoading, loadFromStorage } = useAuthStore();
+  const { isAuthenticated, isLoading, loadFromStorage, token } = useAuthStore();
   const { isInWebView } = useSuperAppBridge();
+  const notificationsSentRef = useRef(false);
 
   // Hide nav only on book detail pages (immersive experience)
   const shouldHideNav = pathname.startsWith('/explorar/libro/');
@@ -28,6 +29,54 @@ export default function AuthenticatedLayout({
       router.replace('/auth/callback?error=session_expired');
     }
   }, [isLoading, isAuthenticated, router]);
+
+  // Enviar notificaciones pendientes al super app via WebView bridge
+  useEffect(() => {
+    if (!isAuthenticated || !token || notificationsSentRef.current) return;
+    if (typeof window === 'undefined' || !(window as any).ReactNativeWebView) return;
+
+    notificationsSentRef.current = true;
+
+    async function sendPendingNotifications() {
+      try {
+        const res = await fetch('/api/notifications', {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        if (!res.ok) return;
+
+        const { notifications } = await res.json();
+        if (!notifications || notifications.length === 0) return;
+
+        // Enviar cada notificación al super app
+        for (const notif of notifications) {
+          (window as any).ReactNativeWebView.postMessage(JSON.stringify({
+            type: 'NOTIFICATION',
+            payload: {
+              title: notif.title,
+              message: notif.message,
+              miniAppId: 'starreads',
+            },
+          }));
+        }
+
+        // Marcar como leídas
+        await fetch('/api/notifications', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            notificationIds: notifications.map((n: any) => n.id),
+          }),
+        });
+      } catch (err) {
+        console.error('Error sending notifications:', err);
+      }
+    }
+
+    sendPendingNotifications();
+  }, [isAuthenticated, token]);
 
   if (isLoading) {
     return (
