@@ -14,9 +14,10 @@ interface VideoCardProps {
   isActive: boolean;
   shouldPreload: boolean;
   shouldEagerPreload?: boolean;
+  hasBottomNav?: boolean;
 }
 
-export function VideoCard({ item, isActive, shouldPreload, shouldEagerPreload }: VideoCardProps) {
+export function VideoCard({ item, isActive, shouldPreload, shouldEagerPreload, hasBottomNav }: VideoCardProps) {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { ref: containerRef, isVisible } = useIntersectionObserver({ threshold: 0.5 });
@@ -245,7 +246,7 @@ export function VideoCard({ item, isActive, shouldPreload, shouldEagerPreload }:
       )}
 
       {/* Right Side Actions */}
-      <div className="absolute right-4 bottom-28 z-20 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+      <div className="absolute right-4 bottom-[120px] z-20 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
         <ActionBar
           item={feedItem}
           onReact={handleReact}
@@ -256,12 +257,12 @@ export function VideoCard({ item, isActive, shouldPreload, shouldEagerPreload }:
       </div>
 
       {/* Bottom Info Overlay */}
-      <div className="absolute bottom-8 left-0 w-full px-4 z-20 flex flex-col justify-end pointer-events-none">
+      <div className="absolute bottom-[120px] left-0 w-full px-4 z-20 flex flex-col justify-end pointer-events-none">
         <VideoOverlay item={feedItem} />
       </div>
 
       {/* Progress Bar */}
-      <ProgressBar currentTime={currentTime} duration={duration} />
+      <ProgressBar currentTime={currentTime} duration={duration} bottomPx={hasBottomNav ? 88 : 0} />
     </div>
   );
 }

@@ -17,6 +17,7 @@ export default function IntelligenceFeedPage() {
   const [isLoading, setIsLoading] = useState(true);
   const loadingRef = useRef(false);
   const shownIdsRef = useRef<Set<string>>(new Set());
+  const hasResetRef = useRef(false);
 
   const intelligence = getIntelligenceByCode(code as string);
 
@@ -43,6 +44,10 @@ export default function IntelligenceFeedPage() {
         const data = await res.json();
 
         if (data.reset && data.items.length === 0) {
+          if (hasResetRef.current) {
+            return;
+          }
+          hasResetRef.current = true;
           shownIdsRef.current = new Set();
           loadingRef.current = false;
           loadFeed();

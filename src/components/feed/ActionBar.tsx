@@ -34,10 +34,10 @@ export function ActionBar({ item, onReact, onBookmark, onShare, onViewBook }: Ac
   };
 
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center gap-3">
       {/* Book Avatar */}
       <div className="flex flex-col items-center gap-1 group cursor-pointer" onClick={onViewBook}>
-        <div className="w-12 h-12 rounded-full border-2 border-white p-0.5 relative overflow-hidden transition-transform group-active:scale-95">
+        <div className="w-10 h-10 rounded-full border-2 border-white p-0.5 relative overflow-hidden transition-transform group-active:scale-95">
           {item.bookCoverUrl ? (
             <img
               alt={item.bookTitle}
@@ -59,12 +59,12 @@ export function ActionBar({ item, onReact, onBookmark, onShare, onViewBook }: Ac
       <div className="flex flex-col items-center gap-1">
         <button
           onClick={handleIlluminate}
-          className={`w-12 h-12 rounded-full glass-icon flex items-center justify-center ${
+          className={`w-10 h-10 rounded-full glass-icon flex items-center justify-center ${
             illuminateAnim ? 'animate-scale-bounce' : ''
           }`}
         >
           <span
-            className={`material-icons-round text-3xl ${
+            className={`material-icons-round text-2xl ${
               item.hasIlluminated
                 ? 'text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.5)]'
                 : 'text-white'
@@ -82,12 +82,12 @@ export function ActionBar({ item, onReact, onBookmark, onShare, onViewBook }: Ac
       <div className="flex flex-col items-center gap-1">
         <button
           onClick={handleFire}
-          className={`w-12 h-12 rounded-full glass-icon flex items-center justify-center group ${
+          className={`w-10 h-10 rounded-full glass-icon flex items-center justify-center group ${
             fireAnim ? 'animate-scale-bounce' : ''
           }`}
         >
           <span
-            className={`material-icons-round text-3xl transition-colors ${
+            className={`material-icons-round text-2xl transition-colors ${
               item.hasFired ? 'text-primary' : 'text-white group-active:text-primary'
             }`}
           >
@@ -103,10 +103,10 @@ export function ActionBar({ item, onReact, onBookmark, onShare, onViewBook }: Ac
       <div className="flex flex-col items-center gap-1">
         <button
           onClick={onBookmark}
-          className="w-12 h-12 rounded-full glass-icon flex items-center justify-center"
+          className="w-10 h-10 rounded-full glass-icon flex items-center justify-center"
         >
           <span
-            className={`material-icons-round text-3xl ${
+            className={`material-icons-round text-2xl ${
               item.hasBookmarked ? 'text-primary' : 'text-white'
             }`}
           >
@@ -122,9 +122,9 @@ export function ActionBar({ item, onReact, onBookmark, onShare, onViewBook }: Ac
       <div className="flex flex-col items-center gap-1">
         <button
           onClick={onShare}
-          className="w-12 h-12 rounded-full glass-icon flex items-center justify-center"
+          className="w-10 h-10 rounded-full glass-icon flex items-center justify-center"
         >
-          <span className="material-icons-round text-3xl text-white -rotate-45 ml-1">
+          <span className="material-icons-round text-2xl text-white -rotate-45 ml-1">
             link
           </span>
         </button>
@@ -132,16 +132,16 @@ export function ActionBar({ item, onReact, onBookmark, onShare, onViewBook }: Ac
       </div>
 
       {/* Vinyl Spinner */}
-      <div className="mt-2 animate-spin-slow">
-        <div className="w-10 h-10 rounded-full bg-gray-900 border-[3px] border-gray-800 flex items-center justify-center overflow-hidden relative">
+      <div className="mt-1 animate-spin-slow">
+        <div className="w-8 h-8 rounded-full bg-gray-900 border-[3px] border-gray-800 flex items-center justify-center overflow-hidden relative">
           {item.bookCoverUrl ? (
             <img
               alt="Audio"
-              className="w-6 h-6 rounded-full object-cover opacity-80"
+              className="w-5 h-5 rounded-full object-cover opacity-80"
               src={item.bookCoverUrl}
             />
           ) : (
-            <div className="w-6 h-6 rounded-full bg-surface-dark" />
+            <div className="w-5 h-5 rounded-full bg-surface-dark" />
           )}
         </div>
       </div>

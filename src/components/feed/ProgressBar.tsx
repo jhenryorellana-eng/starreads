@@ -3,9 +3,10 @@
 interface ProgressBarProps {
   currentTime: number;
   duration: number;
+  bottomPx?: number;
 }
 
-export function ProgressBar({ currentTime, duration }: ProgressBarProps) {
+export function ProgressBar({ currentTime, duration, bottomPx = 0 }: ProgressBarProps) {
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const formatTime = (seconds: number) => {
@@ -15,7 +16,7 @@ export function ProgressBar({ currentTime, duration }: ProgressBarProps) {
   };
 
   return (
-    <div className="absolute bottom-0 left-0 w-full z-30">
+    <div className="absolute left-0 w-full z-30" style={{ bottom: bottomPx }}>
       {/* Time display */}
       <div className="flex justify-between px-3 pb-1">
         <span className="text-[10px] text-white/60">{formatTime(currentTime)}</span>

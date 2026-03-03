@@ -19,6 +19,7 @@ export default function FeedPage() {
   const scrolledToIdea = useRef(false);
   const shownIdsRef = useRef<Set<string>>(new Set());
   const bookCompleteRef = useRef(false);
+  const hasResetRef = useRef(false);
 
   const ideaId = searchParams.get('ideaId');
   const urlMode = searchParams.get('mode');
@@ -47,8 +48,13 @@ export default function FeedPage() {
       if (res.ok) {
         const data = await res.json();
 
-        // If reset signal, clear shown IDs and re-fetch
+        // If reset signal, clear shown IDs and re-fetch (once only)
         if (data.reset && data.items.length === 0) {
+          if (hasResetRef.current) {
+            // Already reset once — no content exists, stop polling
+            return;
+          }
+          hasResetRef.current = true;
           shownIdsRef.current = new Set();
           loadingRef.current = false;
           loadFeed(mode, extra);
@@ -177,6 +183,7 @@ export default function FeedPage() {
             isActive={index === currentIndex}
             shouldEagerPreload={index >= currentIndex + 1 && index <= currentIndex + 2}
             shouldPreload={index <= currentIndex + 4}
+            hasBottomNav
           />
         ))}
       </div>
