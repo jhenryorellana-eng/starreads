@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
       durationSeconds: i.duration_seconds,
       saveCount: i.save_count,
       illuminatedCount: i.illuminated_count,
+      viewCount: i.view_count,
       bookTitle: i.books.title,
       bookAuthor: i.books.author,
     }));
