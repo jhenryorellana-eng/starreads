@@ -62,9 +62,6 @@ export default function PerfilPage() {
       {/* Header */}
       <div className="sticky top-0 z-40 glass-panel flex items-center justify-between px-5 pt-12 pb-4">
         <span className="text-lg font-bold text-white">PERFIL</span>
-        <button className="w-10 h-10 rounded-full glass-icon flex items-center justify-center">
-          <span className="material-icons-round text-white">settings</span>
-        </button>
       </div>
 
       <div className="relative z-10 px-5 py-6 space-y-8">
